@@ -1,12 +1,12 @@
 import { Route, Switch } from 'react-router-dom';
-import Home from './pages/home/index';
+import Cities from './pages/cities/index';
 import './App.css';
 
 function App() {
   return (
     <main>
       <Switch>
-        <Route path="/" component={Home} exact />
+        <Route path="/" component={Cities} exact />
       </Switch>
     </main>
   );
