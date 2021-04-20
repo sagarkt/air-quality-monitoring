@@ -1,50 +1,49 @@
 import React, { Component } from 'react';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import Card from 'react-bootstrap/Card'
+import CityCard from './components/city_card';
+import sinceTimeFormatter from '../../utilities/since_time_formatter';
 
 export default class Home extends Component {
+
+  ws = new WebSocket('ws://city-ws.herokuapp.com');
+
+  constructor() {
+    super();
+    this.state = { allCities: {} };
+  }
+
+  componentDidMount() {
+    this.ws.onopen = () => {
+      console.log('connected');
+    }
+
+    this.ws.onmessage = evt => {
+      let cities = JSON.parse(evt.data);
+      let allCities = this.state.allCities;
+      let lastUpdatedDate = new Date();
+      cities.forEach((city) => {
+        allCities[city.city] = allCities[city.city] || {};
+        allCities[city.city]['old'] = allCities[city.city]['old'] || [];
+        allCities[city.city]['old'].push(city.aqi);
+        allCities[city.city]['latest'] = {
+          city: city.city,
+          aqi: city.aqi,
+          lastUpdatedDate: sinceTimeFormatter(lastUpdatedDate),
+          old: allCities[city.city]['old']
+        };
+      });
+      this.setState({allCities: allCities});
+    }
+
+    this.ws.onclose = () => {
+      console.log('disconnected');
+    }
+  }
+
   render() {
-    return(
-      <Container>
-        <Card border="primary">
-          <Card.Body>
-            <Row className="justify-content-md-center">
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                <Card.Title>Pune</Card.Title>
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                <Card.Text>AQI</Card.Text>
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                Sparkline Chart Here
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                Last Updated On: 12th Jan
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-        <Card border="primary">
-          <Card.Body>
-            <Row className="justify-content-md-center">
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                <Card.Title>Pune</Card.Title>
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                <Card.Text>AQI</Card.Text>
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                Sparkline Chart Here
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                Last Updated On: 12th Jan
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Container>
-    )
+    let cities = [];
+    for(let city in this.state.allCities) {
+      cities.push(<CityCard city={this.state.allCities[city]['latest']} key={this.state.allCities[city]['latest'].city}/>);
+    }
+    return cities;
   }
 }
