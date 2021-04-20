@@ -4,7 +4,7 @@ import sinceTimeFormatter from '../../utilities/since_time_formatter';
 
 export default class Home extends Component {
 
-  ws = new WebSocket('ws://city-ws.herokuapp.com');
+  ws = new WebSocket('wss://city-ws.herokuapp.com');
 
   constructor() {
     super();
