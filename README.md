@@ -1,3 +1,10 @@
+### Time Taken
+
+1. For Basic Setup - 1.15hr
+2. For Creating Basic HTML and Components - 1hr
+3. For Adding Sparkline Chart - 2hrs - Was unsatisfied with the libraries. Spend more time in searching and understanding.
+4. Deployment - 30mins
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
