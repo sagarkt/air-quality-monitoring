@@ -9,6 +9,7 @@ function App() {
       <Header />
       <Switch>
         <Route path="/" component={Cities} exact />
+        <Route path="/air-quality-monitoring/" component={Cities} exact />
       </Switch>
     </main>
   );
